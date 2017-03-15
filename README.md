@@ -3,6 +3,9 @@ This is the [IBM UrbanCode Deploy](https://developer.ibm.com/urbancode/products/
 
 More information about this plugin is available [here](https://developer.ibm.com/urbancode/plugin/jenkins-2-0/) and [here](https://developer.ibm.com/urbancode/plugindoc/ibmucd/jenkins-pipeline-formerly-jenkins-2-0/).
 
+## Installation
+The compiled plugin is available for download on the [IBM UrbanCode website](https://developer.ibm.com/urbancode/plugin/jenkins-2-0/). Download the plugin from our website if you wish to skip the manual build step. No special steps are required for installation. Otherwise, clone this repository and run the `ant` command in the top level folder. This should compile the code and create a .hpi file within the /dist folder. Use this command if you wish to make local changes to the plugin. The build process will automatically install Apache Ivy if it is not previously installed.
+
 ## Pipeline Examples
 ### Create Component Version
 ```groovy
@@ -79,6 +82,9 @@ node {
 ```
 
 ## Release Notes
+### Version 2.3
+Fixed APAR PI77548 - Component process properties failing to resolve on deployment.
+
 ### Version 2.2
 Fixed RFE 98375 - Jenkins Plugin only allows Global credentials instead of job-based credentials.
 

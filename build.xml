@@ -1,4 +1,4 @@
-<project name="jenkins-pipeline-ud-plugin" default="dist" xmlns:codestation="antlib:com.urbancode.codestation2.client">
+<project name="jenkins-pipeline-ud-plugin" default="dist" xmlns:codestation="antlib:com.urbancode.codestation2.client" xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <defaultexcludes add="**/.ahs.dig" />
     <defaultexcludes add="**/.ahs.manifest" />
@@ -12,30 +12,25 @@
          PROJECT CONFIGURATION
          ================================================================== -->
     <property name="project" value="${ant.project.name}"/>
-    <property name="build.life.id" value="${env.AH_BUILD_LIFE_ID}"/>
-
     <property name="ahp.branch.name" value="master"/>
     <property name="ahp.project.name" value="${project}"/>
     <property name="ahp.workflow.name" value="build workflow [${ahp.branch.name}]"/>
-    <condition property="plugin.version" value="${env.AH_BUILD_LIFE_ID}" else="dev">
+
+    <condition property="build.life.id" value="${env.AH_BUILD_LIFE_ID}">
         <isset property="env.AH_BUILD_LIFE_ID" />
     </condition>
-    
+    <condition property="plugin.version" value="${build.life.id}" else="dev">
+        <isset property="build.life.id" />
+    </condition>
+
     <property name="MAVEN_HOME" value="${env.MAVEN_HOME}"/>
 
     <!-- ==================================================================
          ENVIRONMENTAL DETECTION
          ================================================================== -->
-    <condition property="git" value="git.cmd">
-        <os family="windows" />
-    </condition>
-    <condition property="git" value="git">
-        <not>
-            <os family="windows" />
-        </not>
-    </condition>
+    <property name="git" value="git"/>
 
-    <condition property="mvn" value="${MAVEN_HOME}/bin/mvn.bat">
+    <condition property="mvn" value="${MAVEN_HOME}/bin/mvn.cmd">
         <os family="windows" />
     </condition>
     <condition property="mvn" value="${MAVEN_HOME}/bin/mvn">
@@ -53,6 +48,8 @@
     <property name="src.main.java.dir" location="${src.dir}/main/java" />
 
     <property name="lib.dir" location="lib" />
+    <property name="lib.build.dir" location="${lib.dir}/build" />
+    <property name="lib.test.dir" location="${lib.dir}/test" />
 
     <!-- ==================================================================
          LOCATIONS OF BUILD ARTIFACTS
@@ -87,15 +84,57 @@
     <!-- ==================================================================
          ARTIFACT HANDLING
          ================================================================== -->
-    <target name="resolve" unless="resolve.no"
-            description="Resolve all dependencies">
+    <target name="resolve"
+    	unless="resolve.no"
+    	description="Resolve all dependencies"
+    	depends="resolve-ivy, resolve-codestation">
+    </target>
+
+	<target name="resolve-codestation" if="build.life.id"
+            description="Resolve all codestation dependencies">
             <mkdir dir="${lib.dir}"/>
         <codestation:resolve
             buildLife="${build.life.id}"
             xmlFile="dependencies.xml" />
     </target>
 
-    <target name="publish" depends="dist" unless="publish.no"
+    <target name="resolve-ivy" depends="install-ivy" unless="build.life.id" description="Resolve all ivy dependencies">
+        <ivy:settings file="ivysettings.xml"/>
+        <mkdir dir="${lib.dir}"/>
+        <mkdir dir="${lib.build.dir}"/>
+        <mkdir dir="${lib.test.dir}"/>
+        <ivy:retrieve conf="default" pattern="${lib.dir}/[artifact]-[revision](-[classifier]).[ext]"/>
+        <ivy:retrieve conf="urbancode" pattern="${lib.dir}/[artifact].[ext]"/>
+        <ivy:retrieve conf="build" pattern="${lib.dir}/[conf]/[artifact]-[revision](-[classifier]).[ext]"/>
+        <ivy:retrieve conf="test" pattern="${lib.dir}/[conf]/[artifact]-[revision](-[classifier]).[ext]"/>
+    </target>
+
+    <!-- =================================================== -->
+    <!-- INSTALL IVY TARGET                                  -->
+    <!-- =================================================== -->
+    <available classname="org.apache.ivy.Main" property="ivy.installed"/>
+    <target name="install-ivy" depends="-install, -fail"></target>
+
+    <target name="-install" description="Install ivy" unless="ivy.installed">
+        <!-- Installation -->
+        <property name="antHome" value="${user.home}${file.separator}.ant"/>
+        <mkdir dir="${antHome}${file.separator}lib"/>
+        <get dest="${antHome}${file.separator}lib${file.separator}ivy.jar" src="http://search.maven.org/remotecontent?filepath=org/apache/ivy/ivy/2.3.0/ivy-2.3.0.jar"/>
+        <echo message="SUCCESS! Ivy has been installed in ${antHome}." />
+
+        <!-- Determine whether to continue or fail -->
+        <property name="failIvy" value="true"/>
+        <condition property="do.fail">
+            <equals arg1="${failIvy}" arg2="true" />
+        </condition>
+    </target>
+
+    <!-- Default to fail if Ivy installed, unless -DfailIvy=false : Used for .travis -->
+    <target name="-fail" if="do.fail">
+        <fail message="Please run the build again.${line.separator}Note: If you get this message more than once, trying specify your Ant's home directory with the flag: ant -DantHome='ant/home/directory/here' or set/export the `ANT_HOME` environment variable." />
+    </target>
+
+    <target name="publish" if="buildlife.exists" depends="dist" unless="publish.no"
             description="Publish artifacts to local codestation repository">
         <codestation:publish
             project="${ahp.project.name}"
@@ -113,26 +152,6 @@
           <arg value="-Dfile=lib/uDeployRestClient.jar"/>
           <arg value="-DgroupId=uc-uDeployRestClient"/>
           <arg value="-DartifactId=uc-uDeployRestClient"/>
-          <arg value="-Dversion=1.0-SNAPSHOT"/>
-          <arg value="-Dpackaging=jar"/>
-          <arg value="-DgeneratePom=true"/>
-        </exec>
-        <exec executable="${mvn}">
-          <arg value="--batch-mode"/>
-          <arg value="install:install-file"/>
-          <arg value="-Dfile=lib/codestation-aggregate.jar"/>
-          <arg value="-DgroupId=uc-codestation-aggregate"/>
-          <arg value="-DartifactId=uc-codestation-aggregate"/>
-          <arg value="-Dversion=1.0-SNAPSHOT"/>
-          <arg value="-Dpackaging=jar"/>
-          <arg value="-DgeneratePom=true"/>
-        </exec>
-        <exec executable="${mvn}">
-          <arg value="--batch-mode"/>
-          <arg value="install:install-file"/>
-          <arg value="-Dfile=lib/replicated-codestation.jar"/>
-          <arg value="-DgroupId=uc-replicated-codestation"/>
-          <arg value="-DartifactId=uc-replicated-codestation"/>
           <arg value="-Dversion=1.0-SNAPSHOT"/>
           <arg value="-Dpackaging=jar"/>
           <arg value="-DgeneratePom=true"/>
@@ -247,4 +266,3 @@
         </exec>
     </target>
 </project>
-
