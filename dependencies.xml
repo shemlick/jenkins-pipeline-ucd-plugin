@@ -76,22 +76,6 @@
     </dependency>
 
     <dependency>
-      <ah-project name="codestation-aggregate" workflow="build workflow [master]"/>
-      <criteria status="success"/>
-      <delivery artifact-set="Dist">
-        <directory>lib</directory>
-      </delivery>
-    </dependency>
-
-    <dependency>
-      <ah-project name='replicated-codestation' workflow='build workflow [master]' />
-      <criteria status='success' />
-      <delivery artifact-set='Dist'>
-        <directory>lib</directory>
-      </delivery>
-    </dependency>
-
-    <dependency>
       <cs-project name="Apache-Commons-Lang3" />
       <criteria stamp="3.*" status="success" />
       <delivery artifact-set="Default">
