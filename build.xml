@@ -113,26 +113,6 @@
         <exec executable="${mvn}">
           <arg value="--batch-mode"/>
           <arg value="install:install-file"/>
-          <arg value="-Dfile=lib/codestation-aggregate.jar"/>
-          <arg value="-DgroupId=uc-codestation-aggregate"/>
-          <arg value="-DartifactId=uc-codestation-aggregate"/>
-          <arg value="-Dversion=1.0-SNAPSHOT"/>
-          <arg value="-Dpackaging=jar"/>
-          <arg value="-DgeneratePom=true"/>
-        </exec>
-        <exec executable="${mvn}">
-          <arg value="--batch-mode"/>
-          <arg value="install:install-file"/>
-          <arg value="-Dfile=lib/replicated-codestation.jar"/>
-          <arg value="-DgroupId=uc-replicated-codestation"/>
-          <arg value="-DartifactId=uc-replicated-codestation"/>
-          <arg value="-Dversion=1.0-SNAPSHOT"/>
-          <arg value="-Dpackaging=jar"/>
-          <arg value="-DgeneratePom=true"/>
-        </exec>
-        <exec executable="${mvn}">
-          <arg value="--batch-mode"/>
-          <arg value="install:install-file"/>
           <arg value="-Dfile=lib/CommonsUtil.jar"/>
           <arg value="-DgroupId=uc-commons-util"/>
           <arg value="-DartifactId=uc-commons-util"/>
