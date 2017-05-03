@@ -12,7 +12,6 @@
          PROJECT CONFIGURATION
          ================================================================== -->
     <property name="project" value="${ant.project.name}"/>
-    <property name="build.life.id" value="${env.AH_BUILD_LIFE_ID}"/>
 
     <property name="ahp.branch.name" value="master"/>
     <property name="ahp.project.name" value="${project}"/>
@@ -84,7 +83,7 @@
             description="Resolve all dependencies">
             <mkdir dir="${lib.dir}"/>
         <codestation:resolve
-            buildLife="${build.life.id}"
+            buildLife="${env.AH_BUILD_LIFE_ID}"
             xmlFile="dependencies.xml" />
     </target>
 
