@@ -10,9 +10,11 @@ The compiled plugin is available for download on the [IBM UrbanCode website](htt
 Plug-ins downloaded directly from the [IBM UrbanCode Plug-ins microsite](https://developer.ibm.com/urbancode/plugins) are fully supported by IBM. Create a GitHub Issue or Pull Request for minor requests and bug fixes. For time sensitive issues that require immediate assistance, [file a PMR](https://www-947.ibm.com/support/servicerequest/newServiceRequest.action) through the normal IBM support channels. Plug-ins built externally or modified with custom code are supported on a best-effort-basis using GitHub Issues.
 
 ### Locally Build the Plug-in
-This open source plug-in uses Gradle as its build tool. [Install the latest version of Gradle](https://gradle.org/install) to build the plug-in locally. Build the plug-in by running the `gradle` command in the plug-in's root directory. The plug-in distributable will be placed under the `build/libs` folder.
+This open source plug-in uses Gradle as its build tool. [Install the latest version of Gradle](https://gradle.org/install) to build the plug-in locally. Build the plug-in by running the `gradle jpi` command in the plug-in's root directory. The plug-in distributable will be placed under the `build/libs` folder.
 
 ## Pipeline Examples
+Full explanation of these Pipeline syntax examples can be found on our [Jenkins Pipeline Syntax](https://developer.ibm.com/urbancode/plugindoc/ibmucd/jenkins-pipeline-formerly-jenkins-2-0/2-2/jenkins-pipeline-syntax-overview/) documentation.
+
 ### Create Component Version
 ```groovy
 node {
@@ -33,8 +35,7 @@ node {
                 fileIncludePatterns: '*.zip',
                 fileExcludePatterns: '',
                 pushProperties: 'jenkins.server=Local\njenkins.reviewed=false',
-                pushDescription: 'Pushed from Jenkins',
-                pushIncremental: false
+                pushDescription: 'Pushed from Jenkins'
             ]
         ]
     ])
@@ -46,6 +47,10 @@ node {
 node {
    step([$class: 'UCDeployPublisher',
         siteName: 'local',
+        component: [
+            $class: 'com.urbancode.jenkins.plugins.ucdeploy.VersionHelper$VersionBlock',
+            componentName: 'Jenkins'
+        ],
         deploy: [
             $class: 'com.urbancode.jenkins.plugins.ucdeploy.DeployHelper$DeployBlock',
             deployApp: 'Jenkins',
