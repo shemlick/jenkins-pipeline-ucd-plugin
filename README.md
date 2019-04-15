@@ -93,6 +93,9 @@ node {
 ```
 
 ## Release Notes
+### Version 2.12
+Set component version as environment variable when pushing a new version.
+
 ### Version 2.11
 Added option to skip waiting for a successful deployment from UCD.
 

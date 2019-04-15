@@ -4,12 +4,17 @@
  * The Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
  * U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
  */
- 
+
 package com.urbancode.jenkins.plugins.ucdeploy;
 
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.model.TaskListener;
+import hudson.slaves.EnvironmentVariablesNodeProperty;
+import hudson.slaves.NodeProperty;
+import hudson.slaves.NodePropertyDescriptor;
+import hudson.util.DescribableList;
+import jenkins.model.Jenkins;
 
 import java.io.File;
 import java.io.IOException;
@@ -154,6 +159,7 @@ public class VersionHelper {
             UUID versionId;
             try {
                 versionId = verClient.createVersion(componentName, version, envVars.expand(pushBlock.getPushDescription()));
+                putEnvVar(componentName + "_VersionId", versionId.toString());
             }
             catch (Exception ex) {
                 throw new AbortException("Failed to create component version: " + ex.getMessage());
@@ -250,6 +256,35 @@ public class VersionHelper {
             throw new AbortException("Failed to upload files: " + ex.getMessage());
         }
     }
+
+    /**
+     * Set environment variable.
+     * @param key
+     * @param value
+     * @throws IOException
+     */
+    private void putEnvVar(String key, String value) throws IOException {
+        key = key.replaceAll(" ", "_");
+        listener.getLogger().println("Setting environment variable " + key + ".");
+        Jenkins jenkins = Jenkins.getInstance();
+        DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties =
+                jenkins.getGlobalNodeProperties();
+        List<EnvironmentVariablesNodeProperty> envVarsNodePropertyList =
+                globalNodeProperties.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class);
+
+        EnvironmentVariablesNodeProperty newEnvVarsNodeProperty = null;
+        EnvVars envVars = null;
+
+        if (envVarsNodePropertyList == null || envVarsNodePropertyList.isEmpty()) {
+           newEnvVarsNodeProperty = new hudson.slaves.EnvironmentVariablesNodeProperty();
+           globalNodeProperties.add(newEnvVarsNodeProperty);
+           envVars = newEnvVarsNodeProperty.getEnvVars();
+        } else {
+           envVars = envVarsNodePropertyList.get(0).getEnvVars();
+        }
+        envVars.put(key, value);
+        jenkins.save();
+     }
 
     /**
      * Split a string of filenames by newline and remove empty/null entries
