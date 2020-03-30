@@ -349,7 +349,7 @@ public class DeployHelper {
                         && !deploymentResult.equalsIgnoreCase("SCHEDULED FOR FUTURE")) {
                     processFinished = true;
 
-                    if (deploymentResult.equalsIgnoreCase("FAULTED") || deploymentResult.equalsIgnoreCase("FAILED TO START")) {
+                    if (deploymentResult.equalsIgnoreCase("FAULTED") || deploymentResult.equalsIgnoreCase("FAILED TO START") || deploymentResult.equalsIgnoreCase("CANCELED")) {
                         throw new AbortException("Deployment process failed with result " + deploymentResult);
                     }
                 }
