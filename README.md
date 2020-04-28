@@ -93,6 +93,10 @@ node {
 ```
 
 ## Release Notes
+
+### Version 2.16
+Fixed APAR PH24835 - Update dependencies for compatibility for jenkins 2.2
+
 ### Version 2.15
 Fixed APAR PH23739 - Fixed : Jenkins Plugin Shows success on Canceled job in UCD
 
