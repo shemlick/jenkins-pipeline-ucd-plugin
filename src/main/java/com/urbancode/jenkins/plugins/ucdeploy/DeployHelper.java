@@ -243,9 +243,16 @@ public class DeployHelper {
         if (deployProc.isEmpty()) {
             throw new AbortException("Deploy Process is a required field for deployment.");
         }
+        
+        /*Commenting to support following :
+           1. Operational component process which needs no version.
+           2. Running application generic process 
+        */
+        /*
         if (deployVersions.isEmpty()) {
             throw new AbortException("Deploy Versions is a required field for deployment.");
         }
+        */
 
         /* Deploy logic */
         String snapshot = "";
