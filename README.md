@@ -94,9 +94,9 @@ node {
 
 ## Release Notes
 ### Version 2.16
-Fixed - Making deploy version "not required" field to support following, which needs no version:        
-		1. Operational component process.
-		2. Application generic process.
+Fixed APAR PH25862 - Making deploy version "not required" field to support following, which needs no version:        
+1. Operational component process.
+2. Application generic process.
 
 ### Version 2.15
 Fixed APAR PH23739 - Fixed : Jenkins Plugin Shows success on Canceled job in UCD
