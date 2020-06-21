@@ -93,6 +93,9 @@ node {
 ```
 
 ## Release Notes
+### Version 2.17
+Block "Run as Alternative User" : Help text added for "Alternative Username" and "Alternative Password".
+
 ### Version 2.16
 Fixed APAR PH25862 - Making deploy version "not required" field to support following, which needs no version:        
 1. Operational component process.
