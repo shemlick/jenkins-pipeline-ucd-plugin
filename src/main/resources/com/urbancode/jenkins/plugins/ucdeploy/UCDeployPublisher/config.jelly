@@ -17,10 +17,10 @@
                        checked="${instance.altUserChecked()}">
         <f:block>
           <table style="width:100%">
-            <f:entry title="Alternative Username" field="altUsername" help="${helpURL}/alt-username.html">
+            <f:entry title="Alternative Username" field="altUsername" help="${helpURL}/altUser/alt-username.html">
               <f:textbox/>
             </f:entry>
-            <f:entry title="Alternative Password" field="altPassword" help="${helpURL}/alt-password.html">
+            <f:entry title="Alternative Password" field="altPassword" help="${helpURL}/altUser/alt-password.html">
               <f:password/>
             </f:entry>
           </table>
