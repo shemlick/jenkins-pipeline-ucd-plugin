@@ -247,6 +247,10 @@ public class VersionHelper {
         if (!base.exists()) {
             throw new AbortException("Base artifact directory " + base.getAbsolutePath() + " does not exist");
         }
+        
+        if(base.list().length==0) {
+        	throw new AbortException("Base artifact directory " + base.getAbsolutePath() + " does not contain any files to upload. Please place files.");
+        }
 
         try {
             verClient.addVersionFiles(component,

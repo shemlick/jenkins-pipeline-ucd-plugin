@@ -93,6 +93,9 @@ node {
 ```
 
 ## Release Notes
+### Version 2.18
+Fixed APAR PH28324 - UCD Jenkins Plugin - Fail the Jenkins job if nothing is found to push to UCD( avoid false positive).
+
 ### Version 2.17
 Block "Run as Alternative User" : Help text added for "Alternative Username" and "Alternative Password".
 
