@@ -275,7 +275,8 @@ public class DeployHelper {
 
             listener.getLogger().println("Creating environment snapshot '" + snapshot
                     + "' in UrbanCode Deploy.");
-            appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshot, deployDesc);
+            //appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshot, deployDesc);
+            appClient.createSnapshot(snapshot, deployDesc, deployApp, componentVersions);
 
             listener.getLogger().println("Acquiring all versions of the snapshot.");
             JSONArray snapshotVersions = appClient.getSnapshotVersions(snapshot, deployApp);

@@ -93,6 +93,9 @@ node {
 ```
 
 ## Release Notes
+### Version 2.19
+Fixed : Addition of latest version to specified component only instead of all components.
+
 ### Version 2.18
 Fixed APAR PH28324 - UCD Jenkins Plugin - Fail the Jenkins job if nothing is found to push to UCD( avoid false positive).
 
