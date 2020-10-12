@@ -148,6 +148,9 @@
                   <f:entry field="deployWithSnapshot" title="Deploy With Snapshot" help="${helpURL}/deploy/snapshot/deploy-snapshot.html">
                     <f:checkbox/>
                   </f:entry>
+                  <f:entry field="includeOnlyDeployVersions" title="Include Only Deploy Versions" help="${helpURL}/deploy/deploy-snapshot-for-deploy-versions-only.html">
+                    <f:checkbox default="false"/>
+                  </f:entry>                  
                 </table>
               </f:block>
             </f:optionalBlock>

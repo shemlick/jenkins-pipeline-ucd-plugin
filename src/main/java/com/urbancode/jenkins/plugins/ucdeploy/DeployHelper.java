@@ -187,11 +187,13 @@ public class DeployHelper {
     public static class CreateSnapshotBlock {
         private String snapshotName;
         private Boolean deployWithSnapshot;
+        private Boolean includeOnlyDeployVersions;
 
         @DataBoundConstructor
-        public CreateSnapshotBlock(String snapshotName, Boolean deployWithSnapshot) {
+        public CreateSnapshotBlock(String snapshotName, Boolean deployWithSnapshot, Boolean includeOnlyDeployVersions) {
             this.snapshotName = snapshotName;
             this.deployWithSnapshot = deployWithSnapshot;
+            this.includeOnlyDeployVersions = includeOnlyDeployVersions;
         }
 
         public String getSnapshotName() {
@@ -201,6 +203,15 @@ public class DeployHelper {
         public Boolean getDeployWithSnapshot() {
             if (deployWithSnapshot != null) {
                 return deployWithSnapshot;
+            }
+            else {
+                return false;
+            }
+        }
+        
+        public Boolean getIncludeOnlyDeployVersions() {
+            if (includeOnlyDeployVersions != null) {
+                return includeOnlyDeployVersions;
             }
             else {
                 return false;
@@ -275,8 +286,13 @@ public class DeployHelper {
 
             listener.getLogger().println("Creating environment snapshot '" + snapshot
                     + "' in UrbanCode Deploy.");
-            //appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshot, deployDesc);
-            appClient.createSnapshot(snapshot, deployDesc, deployApp, componentVersions);
+            
+            if(createSnapshot.getIncludeOnlyDeployVersions()) {
+            	appClient.createSnapshot(snapshot, deployDesc, deployApp, componentVersions);
+            }else {
+                appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshot, deployDesc);
+            }
+            
 
             listener.getLogger().println("Acquiring all versions of the snapshot.");
             JSONArray snapshotVersions = appClient.getSnapshotVersions(snapshot, deployApp);
