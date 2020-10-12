@@ -418,6 +418,15 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
         return false;
     }
+  
+    public Boolean getIncludeOnlyDeployVersions() {
+        if (getCreateSnapshot() != null) {
+            return ((getCreateSnapshot()).getIncludeOnlyDeployVersions());
+        }
+        else {
+            return false;
+        }
+    }    
 
     public String getDeployVersions() {
         String deployVersions = "";
