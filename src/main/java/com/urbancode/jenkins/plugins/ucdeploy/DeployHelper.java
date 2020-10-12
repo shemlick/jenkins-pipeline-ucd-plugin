@@ -287,9 +287,9 @@ public class DeployHelper {
             listener.getLogger().println("Creating environment snapshot '" + snapshot
                     + "' in UrbanCode Deploy.");
             
-            if(createSnapshot.getIncludeOnlyDeployVersions()) {
+            if (createSnapshot.getIncludeOnlyDeployVersions()) {
             	appClient.createSnapshot(snapshot, deployDesc, deployApp, componentVersions);
-            }else {
+            } else {
                 appClient.createSnapshotOfEnvironment(deployEnv, deployApp, snapshot, deployDesc);
             }
             
