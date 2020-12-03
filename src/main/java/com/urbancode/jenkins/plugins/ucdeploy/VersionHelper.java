@@ -277,23 +277,33 @@ public class VersionHelper {
         key = key.replaceAll(" ", "_");
         listener.getLogger().println("Setting environment variable " + key + ".");
         Jenkins jenkins = Jenkins.getInstance();
+        listener.getLogger().println("[VersionHelper : DEBUG : 280]  key :" + key + " , value :" + value);
         DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties =
                 jenkins.getGlobalNodeProperties();
+        listener.getLogger().println("[VersionHelper : DEBUG : 283]");
         List<EnvironmentVariablesNodeProperty> envVarsNodePropertyList =
                 globalNodeProperties.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class);
-
+        listener.getLogger().println("[VersionHelper : DEBUG : 286]");
         EnvironmentVariablesNodeProperty newEnvVarsNodeProperty = null;
+        listener.getLogger().println("[VersionHelper : DEBUG : 288]");
         EnvVars envVars = null;
+        listener.getLogger().println("[VersionHelper : DEBUG : 290]");
 
         if (envVarsNodePropertyList == null || envVarsNodePropertyList.isEmpty()) {
            newEnvVarsNodeProperty = new hudson.slaves.EnvironmentVariablesNodeProperty();
+           listener.getLogger().println("[VersionHelper : DEBUG : 294]");
            globalNodeProperties.add(newEnvVarsNodeProperty);
+           listener.getLogger().println("[VersionHelper : DEBUG : 296]");
            envVars = newEnvVarsNodeProperty.getEnvVars();
+           listener.getLogger().println("[VersionHelper : DEBUG : 298]");
         } else {
            envVars = envVarsNodePropertyList.get(0).getEnvVars();
+           listener.getLogger().println("[VersionHelper : DEBUG : 301]");
         }
         envVars.put(key, value);
+        listener.getLogger().println("[VersionHelper : DEBUG : 304]");
         jenkins.save();
+        listener.getLogger().println("[VersionHelper : DEBUG : 306]");
      }
 
     /**
