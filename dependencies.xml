@@ -85,7 +85,7 @@
 
     <dependency>
       <ah-project name='uDeployRestClient' workflow='build workflow [master]' />
-      <criteria stamp="1.0.0.1068960" status='success' />
+      <criteria status='success' />
       <delivery artifact-set='Dist'>
         <directory>lib</directory>
       </delivery>
