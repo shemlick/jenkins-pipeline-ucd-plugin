@@ -93,6 +93,9 @@ node {
 ```
 
 ## Release Notes
+### Version 2.20
+ RFE 147414 : Added ucd application process log url for more details.
+
 ### Version 2.19
 Fixed : Addition of latest version to specified component only instead of all components.
 

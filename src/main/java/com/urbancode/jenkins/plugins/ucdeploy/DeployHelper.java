@@ -41,9 +41,11 @@ public class DeployHelper {
     private ApplicationClient appClient;
     private TaskListener listener;
     private EnvVars envVars;
+    private URI ucdUrl;
 
     public DeployHelper(URI ucdUrl, DefaultHttpClient httpClient, TaskListener listener, EnvVars envVars) {
-        appClient = new ApplicationClient(ucdUrl, httpClient);
+        this.ucdUrl = ucdUrl;
+    	appClient = new ApplicationClient(ucdUrl, httpClient);
         this.listener = listener;
         this.envVars = envVars;
     }
@@ -406,7 +408,7 @@ public class DeployHelper {
 
         listener.getLogger().println("Finished the deployment in " + duration + " seconds");
         listener.getLogger().println("The deployment result is " + deploymentResult + ". See the UrbanCode Deploy deployment " +
-                                     "logs for details.");
+                                     "logs for details : " + ucdUrl + "/#applicationProcessRequest/" + appProcUUID.toString());
     }
 
     private UUID deploy(
