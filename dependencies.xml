@@ -29,7 +29,7 @@
 
     <dependency>
       <cs-project name='Apache HttpComponents' />
-      <criteria stamp='4.3.4' status='success' />
+      <criteria stamp='4.*' status='success' />
       <delivery artifact-set='lib'>
         <directory>lib</directory>
       </delivery>
@@ -85,7 +85,7 @@
 
     <dependency>
       <ah-project name='uDeployRestClient' workflow='build workflow [master]' />
-      <criteria status='success' />
+      <criteria stamp="1.0.0.1068960" status='success' />
       <delivery artifact-set='Dist'>
         <directory>lib</directory>
       </delivery>
