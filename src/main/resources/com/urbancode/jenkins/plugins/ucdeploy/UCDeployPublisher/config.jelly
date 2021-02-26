@@ -86,6 +86,9 @@
             <f:entry field="pushIncremental" title="Incremental Version" help="${helpURL}/create/delivery/push/incremental.html">
               <f:checkbox/>
             </f:entry>
+            <f:entry field="pushFailedBuild" title="Push Failed build" help="${helpURL}/create/delivery/push/pushFailedBuild.html">
+              <f:checkbox/>
+            </f:entry>
             </f:dropdownListBlock>
           <f:dropdownListBlock title="Trigger Import"
                                value="Pull"

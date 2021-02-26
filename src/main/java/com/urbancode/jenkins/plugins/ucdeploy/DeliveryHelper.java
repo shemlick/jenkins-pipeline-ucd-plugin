@@ -96,6 +96,7 @@ public class DeliveryHelper implements Serializable {
         private String pushProperties;
         private String pushDescription;
         private Boolean pushIncremental;
+        private Boolean pushFailedBuild;
 
         @DataBoundConstructor
         public Push(
@@ -105,7 +106,8 @@ public class DeliveryHelper implements Serializable {
             String fileExcludePatterns,
             String pushProperties,
             String pushDescription,
-            Boolean pushIncremental)
+            Boolean pushIncremental,
+            Boolean pushFailedBuild)
         {
             super(DeliveryType.Push);
             this.pushVersion = pushVersion;
@@ -115,6 +117,7 @@ public class DeliveryHelper implements Serializable {
             this.pushProperties = pushProperties;
             this.pushDescription = pushDescription;
             this.pushIncremental = pushIncremental;
+            this.pushFailedBuild = pushFailedBuild;
         }
 
         public String getPushVersion() {
@@ -174,6 +177,15 @@ public class DeliveryHelper implements Serializable {
         public Boolean getPushIncremental() {
             if (pushIncremental != null) {
                 return pushIncremental;
+            }
+            else {
+                return false;
+            }
+        }
+
+        public Boolean getPushFailedBuild() {
+            if (pushFailedBuild != null) {
+                return pushFailedBuild;
             }
             else {
                 return false;
