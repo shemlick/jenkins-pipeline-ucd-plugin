@@ -93,8 +93,11 @@ node {
 ```
 
 ## Release Notes
+### Version 2.21
+Update dependencies for compatibility for jenkins 2.2.
+
 ### Version 2.20
-Update dependencies for compatibility for jenkins 2.2
+RFE 147414 : Added ucd application process log url for more details.
 
 ### Version 2.19
 Fixed : Addition of latest version to specified component only instead of all components.
