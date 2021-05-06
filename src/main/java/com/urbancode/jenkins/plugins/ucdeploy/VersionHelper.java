@@ -158,9 +158,12 @@ public class VersionHelper {
 
             UUID versionId;
             try {
+                listener.getLogger().println("[VersionHelper] Creating new version");
                 versionId = verClient.createVersion(componentName, version, envVars.expand(pushBlock.getPushDescription()));
+                listener.getLogger().println("[VersionHelper] Created new version");
             }
             catch (Exception ex) {
+                listener.getLogger().println("[VersionHelper] Exception raised from UDRESTCLIENT DEPENDENCY");
                 throw new AbortException("Failed to create component version: " + ex.getMessage());
             }
             listener.getLogger().println("Successfully created component version with UUID '" + versionId.toString() + "'");
