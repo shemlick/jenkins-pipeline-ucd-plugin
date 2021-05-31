@@ -7,10 +7,23 @@
 
 package com.urbancode.jenkins.plugins.ucdeploy;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import java.io.BufferedReader;
+import org.apache.http.HttpEntity;
+import org.apache.http.util.EntityUtils;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.model.TaskListener;
-
+import hudson.slaves.EnvironmentVariablesNodeProperty;
+import hudson.slaves.NodeProperty;
+import hudson.slaves.NodePropertyDescriptor;
+import hudson.util.DescribableList;
+import jenkins.model.Jenkins;
+import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.lang.InterruptedException;
 import java.net.URI;
@@ -20,8 +33,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -30,6 +47,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import com.urbancode.jenkins.plugins.ucdeploy.ProcessHelper;
 import com.urbancode.jenkins.plugins.ucdeploy.ProcessHelper.CreateProcessBlock;
 import com.urbancode.ud.client.ApplicationClient;
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * This class is used to provide access to the UrbanCode Deploy rest client
@@ -182,6 +200,58 @@ public class DeployHelper {
             }
             else {
                 return false;
+            }
+        }
+
+        public String getMethod(String uri) throws Exception{
+            String result ="";
+            HttpGet method = new HttpGet(uri);
+            try {
+                HttpResponse response = UCDeploySite.client.execute(method);
+                int responseCode = response.getStatusLine().getStatusCode();
+                if (responseCode == 401) {
+                    throw new Exception("Error connecting to IBM UrbanCode Deploy: Invalid user and/or password");
+                }
+                else if (responseCode != 200) {
+                    throw new Exception("Error connecting to IBM UrbanCode Deploy: " + responseCode + "using URI: " + uri.toString());
+                }
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    // return it as a String
+                    result = EntityUtils.toString(entity);
+                    System.out.println(result);
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            finally {
+                method.releaseConnection();
+            }
+            return result;
+        }
+
+        public void createGlobalEnvironmentVariables(String key, String value) {
+
+            Jenkins instance = Jenkins.getInstance();
+
+            DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties = instance.getGlobalNodeProperties();
+            List<EnvironmentVariablesNodeProperty> envVarsNodePropertyList = globalNodeProperties.getAll(EnvironmentVariablesNodeProperty.class);
+
+            EnvironmentVariablesNodeProperty newEnvVarsNodeProperty = null;
+            EnvVars envVars = null;
+
+            if ( envVarsNodePropertyList == null || envVarsNodePropertyList.size() == 0 ) {
+                newEnvVarsNodeProperty = new hudson.slaves.EnvironmentVariablesNodeProperty();
+                globalNodeProperties.add(newEnvVarsNodeProperty);
+                envVars = newEnvVarsNodeProperty.getEnvVars();
+            } else {
+                envVars = envVarsNodePropertyList.get(0).getEnvVars();
+            }
+            envVars.put(key, value);
+            try {
+                instance.save();
+            } catch(Exception e) {
+                System.out.println("Failed to create env variable"+e);
             }
         }
     }
@@ -360,6 +430,55 @@ public class DeployHelper {
 
         listener.getLogger().println("Deployment request id is: '" + appProcUUID.toString() + "'");
         listener.getLogger().println("Deployment is running. Waiting for UCD Server feedback.");
+        
+        try{
+                URI uri = UriBuilder.fromPath(ucdUrl.toString()).path("rest").path("release").path("syncAllApplications").build();
+                String data = deployBlock.getMethod(uri.toString());
+                listener.getLogger().println("ALL APPlication DATA--->*****"+data);
+                String applicationId ="";
+                JSONArray array = new JSONArray(data);  
+                    for(int i=0; i < array.length(); i++)   
+                    {  
+                        listener.getLogger().println(array.getJSONObject(i).getString("id"));  
+                        listener.getLogger().println(array.getJSONObject(i).getString("name")+"==="+deployApp.toString()+"---");
+                        listener.getLogger().println(array.getJSONObject(i).getString("name").equalsIgnoreCase(deployApp.toString()));
+                        if(array.getJSONObject(i).getString("name").equalsIgnoreCase(deployApp.toString())){
+                            applicationId = array.getJSONObject(i).getString("id");
+                            break;
+                        }
+                    }  
+                    
+                    listener.getLogger().println("APPLICATION ID is " + applicationId);
+                //  find version count
+               //  https://localhost:8443/rest/deploy/application/178f9e1a-c4c6-150e-a3d7-57c8d7e2eddd
+                    if(applicationId!= ""){
+                        URI uri1 = UriBuilder.fromPath(ucdUrl.toString()).path("rest").path("deploy").path("application").path(applicationId).build();
+                        String data1 = deployBlock.getMethod(uri1.toString());
+                        listener.getLogger().println("uri1--->*****"+uri1.toString());
+                        listener.getLogger().println("APPlication Version Counts--->*****"+data1);
+
+                        JSONObject objectData = new JSONObject(data1);
+                        JSONObject propSheet = objectData.getJSONObject("propSheet");
+                        String versionCount = propSheet.getString("versionCount");
+                        listener.getLogger().println("Version Counts--->*****"+versionCount);
+                        // find Application property 
+                        // https://localhost:8443/property/propSheet/applications%26178f9e1a-c4c6-150e-a3d7-57c8d7e2eddd%26propSheet.5
+                        String uri2 = ucdUrl.toString()+"/property/propSheet/applications%26"+applicationId+"%26propSheet."+versionCount;
+                        String data2 = deployBlock.getMethod(uri2);
+                        listener.getLogger().println("ALL APPlication DATA--->*****"+data2);
+                        JSONObject PropertyObject = new JSONObject(data2);
+                        JSONArray array1 = new JSONArray(PropertyObject.getString("properties"));  
+                        for(int i=0; i < array1.length(); i++)   
+                        {  
+                            listener.getLogger().println(array1.getJSONObject(i).getString("name"));
+                            listener.getLogger().println(array1.getJSONObject(i).getString("value")); 
+                            deployBlock.createGlobalEnvironmentVariables(array1.getJSONObject(i).getString("name"),array1.getJSONObject(i).getString("value"));
+                        }
+                    }
+            
+        }catch (Exception e) {
+                listener.getLogger().println(e);
+        }
 
         long startTime = new Date().getTime();
         boolean processFinished = false;
