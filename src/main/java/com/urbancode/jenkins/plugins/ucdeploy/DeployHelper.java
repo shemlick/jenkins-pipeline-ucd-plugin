@@ -430,56 +430,7 @@ public class DeployHelper {
 
         listener.getLogger().println("Deployment request id is: '" + appProcUUID.toString() + "'");
         listener.getLogger().println("Deployment is running. Waiting for UCD Server feedback.");
-        
-        try{
-                URI uri = UriBuilder.fromPath(ucdUrl.toString()).path("rest").path("release").path("syncAllApplications").build();
-                String data = deployBlock.getMethod(uri.toString());
-                listener.getLogger().println("ALL APPlication DATA--->*****"+data);
-                String applicationId ="";
-                JSONArray array = new JSONArray(data);  
-                    for(int i=0; i < array.length(); i++)   
-                    {  
-                        listener.getLogger().println(array.getJSONObject(i).getString("id"));  
-                        listener.getLogger().println(array.getJSONObject(i).getString("name")+"==="+deployApp.toString()+"---");
-                        listener.getLogger().println(array.getJSONObject(i).getString("name").equalsIgnoreCase(deployApp.toString()));
-                        if(array.getJSONObject(i).getString("name").equalsIgnoreCase(deployApp.toString())){
-                            applicationId = array.getJSONObject(i).getString("id");
-                            break;
-                        }
-                    }  
-                    
-                    listener.getLogger().println("APPLICATION ID is " + applicationId);
-                //  find version count
-               //  https://localhost:8443/rest/deploy/application/178f9e1a-c4c6-150e-a3d7-57c8d7e2eddd
-                    if(applicationId!= ""){
-                        URI uri1 = UriBuilder.fromPath(ucdUrl.toString()).path("rest").path("deploy").path("application").path(applicationId).build();
-                        String data1 = deployBlock.getMethod(uri1.toString());
-                        listener.getLogger().println("uri1--->*****"+uri1.toString());
-                        listener.getLogger().println("APPlication Version Counts--->*****"+data1);
-
-                        JSONObject objectData = new JSONObject(data1);
-                        JSONObject propSheet = objectData.getJSONObject("propSheet");
-                        String versionCount = propSheet.getString("versionCount");
-                        listener.getLogger().println("Version Counts--->*****"+versionCount);
-                        // find Application property 
-                        // https://localhost:8443/property/propSheet/applications%26178f9e1a-c4c6-150e-a3d7-57c8d7e2eddd%26propSheet.5
-                        String uri2 = ucdUrl.toString()+"/property/propSheet/applications%26"+applicationId+"%26propSheet."+versionCount;
-                        String data2 = deployBlock.getMethod(uri2);
-                        listener.getLogger().println("ALL APPlication DATA--->*****"+data2);
-                        JSONObject PropertyObject = new JSONObject(data2);
-                        JSONArray array1 = new JSONArray(PropertyObject.getString("properties"));  
-                        for(int i=0; i < array1.length(); i++)   
-                        {  
-                            listener.getLogger().println(array1.getJSONObject(i).getString("name"));
-                            listener.getLogger().println(array1.getJSONObject(i).getString("value")); 
-                            deployBlock.createGlobalEnvironmentVariables(array1.getJSONObject(i).getString("name"),array1.getJSONObject(i).getString("value"));
-                        }
-                    }
-            
-        }catch (Exception e) {
-                listener.getLogger().println(e);
-        }
-
+       
         long startTime = new Date().getTime();
         boolean processFinished = false;
         String deploymentResult = "";
@@ -528,6 +479,53 @@ public class DeployHelper {
         listener.getLogger().println("Finished the deployment in " + duration + " seconds");
         listener.getLogger().println("The deployment result is " + deploymentResult + ". See the UrbanCode Deploy deployment " +
                                      "logs for details : " + ucdUrl + "/#applicationProcessRequest/" + appProcUUID.toString());
+        
+        listener.getLogger().println("Starting Application Property Fetching...");
+        try{
+            URI uri = UriBuilder.fromPath(ucdUrl.toString()).path("rest").path("release").path("syncAllApplications").build();
+            String data = deployBlock.getMethod(uri.toString());
+            // listener.getLogger().println("ALL APPlication DATA--->*****"+data);
+            String applicationId ="";
+            JSONArray array = new JSONArray(data);  
+                for(int i=0; i < array.length(); i++)   
+                {  
+                    // listener.getLogger().println(array.getJSONObject(i).getString("id"));  
+                    // listener.getLogger().println(array.getJSONObject(i).getString("name")+"==="+deployApp.toString()+"---");
+                    // listener.getLogger().println(array.getJSONObject(i).getString("name").equalsIgnoreCase(deployApp.toString()));
+                    if(array.getJSONObject(i).getString("name").equalsIgnoreCase(deployApp.toString())){
+                        applicationId = array.getJSONObject(i).getString("id");
+                        break;
+                    }
+                }
+            listener.getLogger().println("APPLICATION ID is " + applicationId);
+            if(applicationId!= ""){
+                URI uri1 = UriBuilder.fromPath(ucdUrl.toString()).path("rest").path("deploy").path("application").path(applicationId).build();
+                String data1 = deployBlock.getMethod(uri1.toString());
+                // listener.getLogger().println("uri1--->*****"+uri1.toString());
+                // listener.getLogger().println("APPlication Version Counts--->*****"+data1);
+
+                JSONObject objectData = new JSONObject(data1);
+                JSONObject propSheet = objectData.getJSONObject("propSheet");
+                String versionCount = propSheet.getString("versionCount");
+                // listener.getLogger().println("Version Counts--->*****"+versionCount);
+                // find Application property 
+                // https://localhost:8443/property/propSheet/applications%26178f9e1a-c4c6-150e-a3d7-57c8d7e2eddd%26propSheet.5
+                String uri2 = ucdUrl.toString()+"/property/propSheet/applications%26"+applicationId+"%26propSheet."+versionCount;
+                String data2 = deployBlock.getMethod(uri2);
+                // listener.getLogger().println("ALL APPlication DATA--->*****"+data2);
+                JSONObject PropertyObject = new JSONObject(data2);
+                JSONArray array1 = new JSONArray(PropertyObject.getString("properties"));  
+                for(int i=0; i < array1.length(); i++)   
+                {  
+                    listener.getLogger().println("Env Key: "+array1.getJSONObject(i).getString("name"));
+                    listener.getLogger().println("Env Value:"+array1.getJSONObject(i).getString("value")); 
+                    deployBlock.createGlobalEnvironmentVariables(array1.getJSONObject(i).getString("name"),array1.getJSONObject(i).getString("value"));
+                }
+            }
+        }catch (Exception e) {
+                listener.getLogger().println(e);
+        }
+        listener.getLogger().println("End Application Property Fetching.");
     }
 
     private UUID deploy(
