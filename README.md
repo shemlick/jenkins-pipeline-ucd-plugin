@@ -93,6 +93,8 @@ node {
 ```
 
 ## Release Notes
+### Version 2.22
+ RFE - TODO
 ### Version 2.21
  Fixed : UI Issue compatible for save and apply button.
 
