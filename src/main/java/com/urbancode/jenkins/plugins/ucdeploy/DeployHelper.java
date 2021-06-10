@@ -482,9 +482,10 @@ public class DeployHelper {
         
         listener.getLogger().println("Starting Application Property Fetching...");
         try{
-            URI uri = UriBuilder.fromPath(ucdUrl.toString()).path("rest").path("release").path("syncAllApplications").build();
+            URI uri = UriBuilder.fromPath(ucdUrl.toString()).path("rest").path("deploy").path("application").build();
             String data = deployBlock.getMethod(uri.toString());
-            // listener.getLogger().println("ALL APPlication DATA--->*****"+data);
+            listener.getLogger().println("APPlication URL--->*****"+uri.toString());
+            listener.getLogger().println("ALL APPlication DATA--->*****"+data);
             String applicationId ="";
             JSONArray array = new JSONArray(data);  
                 for(int i=0; i < array.length(); i++)   
@@ -501,18 +502,19 @@ public class DeployHelper {
             if(applicationId!= ""){
                 URI uri1 = UriBuilder.fromPath(ucdUrl.toString()).path("rest").path("deploy").path("application").path(applicationId).build();
                 String data1 = deployBlock.getMethod(uri1.toString());
-                // listener.getLogger().println("uri1--->*****"+uri1.toString());
-                // listener.getLogger().println("APPlication Version Counts--->*****"+data1);
+                listener.getLogger().println("uri--->*****"+uri1.toString());
+                listener.getLogger().println("Application Version Counts--->*****"+data1);
 
                 JSONObject objectData = new JSONObject(data1);
                 JSONObject propSheet = objectData.getJSONObject("propSheet");
                 String versionCount = propSheet.getString("versionCount");
-                // listener.getLogger().println("Version Counts--->*****"+versionCount);
+                listener.getLogger().println("Version Counts--->*****"+versionCount);
                 // find Application property 
                 // https://localhost:8443/property/propSheet/applications%26178f9e1a-c4c6-150e-a3d7-57c8d7e2eddd%26propSheet.5
                 String uri2 = ucdUrl.toString()+"/property/propSheet/applications%26"+applicationId+"%26propSheet."+versionCount;
                 String data2 = deployBlock.getMethod(uri2);
-                // listener.getLogger().println("ALL APPlication DATA--->*****"+data2);
+                listener.getLogger().println("uri--->*****"+uri2.toString());
+                listener.getLogger().println("All APPlication property--->*****"+data2);
                 JSONObject PropertyObject = new JSONObject(data2);
                 JSONArray array1 = new JSONArray(PropertyObject.getString("properties"));  
                 for(int i=0; i < array1.length(); i++)   
