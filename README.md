@@ -94,7 +94,7 @@ node {
 
 ## Release Notes
 ### Version 2.22
- RFE - TODO
+ RFE - Add Application Property in Environment Variable
 ### Version 2.21
  Fixed : UI Issue compatible for save and apply button.
 
