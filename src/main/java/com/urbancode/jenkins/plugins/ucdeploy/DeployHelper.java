@@ -508,7 +508,7 @@ public class DeployHelper {
                 JSONArray array1 = new JSONArray(PropertyObject.getString("properties"));  
                 for(int i=0; i < array1.length(); i++)   
                 {  
-                    if(!array1.getJSONObject(i).getString("secure")){
+                    if(array1.getJSONObject(i).getString("secure") == "false"){
                         listener.getLogger().println("Env : "+array1.getJSONObject(i).getString("name")+"="+array1.getJSONObject(i).getString("value"));
                         deployBlock.createGlobalEnvironmentVariables(array1.getJSONObject(i).getString("name"),array1.getJSONObject(i).getString("value"));
                     }
