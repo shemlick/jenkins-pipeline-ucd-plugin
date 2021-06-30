@@ -93,8 +93,15 @@ node {
 ```
 
 ## Release Notes
-### Version 2.21
+
+### Version 2.23
  Fixed : Added checkbox to push failed build.
+
+### Version 2.22
+ RFE - Add Application Property in Environment Variable
+
+### Version 2.21
+ Fixed : UI Issue compatible for save and apply button.
 
 ### Version 2.20
  RFE 147414 : Added ucd application process log url for more details.
