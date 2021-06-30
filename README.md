@@ -93,8 +93,13 @@ node {
 ```
 
 ## Release Notes
+
+### Version 2.23
+ Fixed : Added checkbox to push failed build.
+
 ### Version 2.22
  RFE - Add Application Property in Environment Variable
+
 ### Version 2.21
  Fixed : UI Issue compatible for save and apply button.
 
