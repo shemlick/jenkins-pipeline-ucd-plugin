@@ -94,6 +94,9 @@ node {
 
 ## Release Notes
 
+### Version 2.24
+Fixed : Updated plugin url.
+
 ### Version 2.23
  Fixed : Added checkbox to push failed build.
 
