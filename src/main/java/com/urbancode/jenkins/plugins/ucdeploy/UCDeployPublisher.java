@@ -517,6 +517,19 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         UCDeploySite udSite = getSite();
         DefaultHttpClient udClient;  // not serializable
 
+        listener.getLogger().println("[perform - START]");
+        listener.getLogger().println(udClient.getClass());
+        try {
+            udSite.verifyConnection();
+            listener.getLogger().println("[Success - Checking jenkins to UCD connection]");
+        }
+        catch (Exception e) {
+            listener.getLogger().println("[Error - Failing jenkins to UCD connection]");
+            error(e.getMessage());
+        }
+        listener.getLogger().println("[perform - END]");
+
+
         if (altUserChecked()) {
             if (getAltUsername().equals("")) {
                 throw new AbortException("Alternative username is a required property when specifying the optional"
@@ -552,6 +565,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
             /* Throw AbortException so that Jenkins will mark job as faulty */
             try {
+                listener.getLogger().println("Cheking deployment is running");
                 deployHelper.runDeployment(getDeploy());
             }
             catch (IOException ex) {
@@ -633,6 +647,17 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         @Override
         public Boolean invoke(File workspace, VirtualChannel node) throws IOException, InterruptedException {
             DefaultHttpClient udClient;
+            listener.getLogger().println("[START]");
+            listener.getLogger().println(udClient.getClass());
+            try {
+                udSite.verifyConnection();
+                listener.getLogger().println("[Success - Checking jenkins to UCD connection]");
+            }
+            catch (Exception e) {
+                listener.getLogger().println("[Error - Failing jenkins to UCD connection]");
+                error(e.getMessage());
+            }
+            listener.getLogger().println("[END]");
 
             if (altUser != null) {
                 udClient = udSite.getTempClient(altUser.getAltUsername(), altUser.getAltPassword());
