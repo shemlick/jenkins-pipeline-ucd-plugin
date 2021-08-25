@@ -518,6 +518,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         DefaultHttpClient udClient;  // not serializable
 
         listener.getLogger().println("[perform - START]");
+        udSite.verifyConnection();
 //         try {
 //             udSite.verifyConnection();
 //             listener.getLogger().println("[Success - Checking jenkins to UCD connection]");
