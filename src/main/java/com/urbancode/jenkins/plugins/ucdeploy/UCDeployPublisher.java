@@ -517,18 +517,16 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         UCDeploySite udSite = getSite();
         DefaultHttpClient udClient;  // not serializable
 
-//         listener.getLogger().println("[perform - START]");
-//         listener.getLogger().println(udClient.getClass());
-//         try {
-//             udSite.verifyConnection();
-//             listener.getLogger().println("[Success - Checking jenkins to UCD connection]");
-//         }
-//         catch (Exception e) {
-//             listener.getLogger().println("[Error - Failing jenkins to UCD connection]");
-//             error(e.getMessage());
-//         }
-//         listener.getLogger().println("[perform - END]");
-
+        listener.getLogger().println("[perform - START]");
+        try {
+            udSite.verifyConnection();
+            listener.getLogger().println("[Success - Checking jenkins to UCD connection]");
+        }
+        catch (Exception e) {
+            listener.getLogger().println("[Error - Failing jenkins to UCD connection]");
+            error(e.getMessage());
+        }
+        listener.getLogger().println("[perform - END]");
 
         if (altUserChecked()) {
             if (getAltUsername().equals("")) {
