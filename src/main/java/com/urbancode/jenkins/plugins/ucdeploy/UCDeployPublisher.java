@@ -27,7 +27,8 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.util.Secret;
 
 import jenkins.tasks.SimpleBuildStep;
-
+import java.io.*;
+import java.util.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
