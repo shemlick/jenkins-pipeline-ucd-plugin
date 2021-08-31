@@ -528,7 +528,6 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         listener.getLogger().println("[cHECKING UDSITE]");
         listener.getLogger().println(udSite);
         listener.getLogger().println("[cHECKING UDCLIENT]");
-        listener.getLogger().println(udClient);
 
         if (altUserChecked()) {
             if (getAltUsername().equals("")) {
