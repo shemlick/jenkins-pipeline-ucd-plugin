@@ -68,19 +68,14 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
         }
 
         public UCDeploySite[] getSites() {
-            try{
-                Iterator<UCDeploySite> it = sites.iterator();
+               Iterator<UCDeploySite> it = sites.iterator();
                 int size = 0;
                 while (it.hasNext()) {
                     // listener.getLogger().println(it);
                     it.next();
                     size++;
                 }
-                return sites.toArray(new UCDeploySite[size]);
-            }catch(Exception e){
-                throw new AbortException(e.getMessage());
-            }
-            
+                return sites.toArray(new UCDeploySite[size]);           
         }
 
         @DataBoundSetter
