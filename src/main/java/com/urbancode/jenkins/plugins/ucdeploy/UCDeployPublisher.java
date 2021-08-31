@@ -476,7 +476,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
      * @return the matching UCDeploySite or null
      */
     public UCDeploySite getSite(final TaskListener listener) {
-        UCDeploySite[] sites = GLOBALDESCRIPTOR.getSites(listener);
+        UCDeploySite[] sites = GLOBALDESCRIPTOR.getSites();
         listener.getLogger().println("[PERFORM - stART]");
         listener.getLogger().println("[COMING FROM GET SITE- CHECKING SITE VALUE]");
         listener.getLogger().println(sites);
