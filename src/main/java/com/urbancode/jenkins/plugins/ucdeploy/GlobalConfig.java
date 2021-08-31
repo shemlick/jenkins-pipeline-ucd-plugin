@@ -37,7 +37,7 @@ import org.kohsuke.stapler.StaplerResponse;
  */
 public class GlobalConfig extends JobProperty<Job<?, ?>> {
 
-
+    TaskListener listener;
     /**
      * {@inheritDoc}
      *
@@ -67,13 +67,12 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
             load();
         }
 
-        public UCDeploySite[] getSites(TaskListener listener) {
+        public UCDeploySite[] getSites() {
             try{
-                listener.getLogger().println("GET SITE Fucntion calling....");
                 Iterator<UCDeploySite> it = sites.iterator();
                 int size = 0;
                 while (it.hasNext()) {
-                    listener.getLogger().println(it);
+                    // listener.getLogger().println(it);
                     it.next();
                     size++;
                 }
