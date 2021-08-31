@@ -474,22 +474,23 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
      *
      * @return the matching UCDeploySite or null
      */
-    public UCDeploySite getSite() {
+    public UCDeploySite getSite(final TaskListener listener) {
         UCDeploySite[] sites = GLOBALDESCRIPTOR.getSites();
-        System.out.println("[COMING FROM GET SITE- CHECKING SITE VALUE]");
-        System.out.println(sites);
+        listener.getLogger().println("[PERFORM - stART]");
+        listener.getLogger().println("[COMING FROM GET SITE- CHECKING SITE VALUE]");
+        listener.getLogger().println(sites);
         if (siteName == null && sites.length > 0) {
-           System.out.println("[COMING FROM IF CONDITION]");
+           listener.getLogger().println("[COMING FROM IF CONDITION]");
             // default
             return sites[0];
         }
         for (UCDeploySite site : sites) {
-            System.out.println("[i AM IN FOR LOOP]");
-            System.out.println(site.getDisplayName());
-            System.out.println(siteName);
+            listener.getLogger().println("[i AM IN FOR LOOP]");
+            listener.getLogger().println(site.getDisplayName());
+            listener.getLogger().println(siteName);
             if (site.getDisplayName().equals(siteName)) {
-                 System.out.println("PASSED ALL IF CONDITION");
-                 System.out.println(site);
+                 listener.getLogger().println("PASSED ALL IF CONDITION");
+                 listener.getLogger().println(site);
                 return site;    
             }
         }
@@ -531,7 +532,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
             }
         }
 
-        UCDeploySite udSite = getSite();
+        UCDeploySite udSite = getSite(listener);
         DefaultHttpClient udClient;  // not serializable
         listener.getLogger().println("[cHECKING UDSITE]");
         listener.getLogger().println(udSite);
