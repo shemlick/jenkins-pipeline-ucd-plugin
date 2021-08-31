@@ -504,9 +504,17 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
     @Override
     public void perform(final Run<?, ?> build, FilePath workspace, Launcher launcher, final TaskListener listener)
             throws AbortException, InterruptedException, IOException {
+        
+        listener.getLogger().println("[PERFORM - stART]");
+        listener.getLogger().println(build);
+        listener.getLogger().println(workspace);
+        listener.getLogger().println(launcher);
+        listener.getLogger().println(listener);
+        listener.getLogger().println("[PERFORM - END]");
         boolean pushFailedBuild = false;
         pushFailedBuild = ((Push)getDelivery()).getPushFailedBuild();
         listener.getLogger().println("INVOKE - CALLED");
+        listener.getLogger().println(pushFailedBuild);
         if (build.getResult() == Result.FAILURE || build.getResult() == Result.ABORTED) {
             if(pushFailedBuild != true || build.getResult() == Result.ABORTED){
                 throw new AbortException("Skip artifacts upload to IBM UrbanCode Deploy - build failed or aborted.");
@@ -517,6 +525,10 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
         UCDeploySite udSite = getSite();
         DefaultHttpClient udClient;  // not serializable
+        listener.getLogger().println("[cHECKING UDSITE]");
+        listener.getLogger().println(udSite);
+        listener.getLogger().println("[cHECKING UDCLIENT]");
+        listener.getLogger().println(udClient);
 
         if (altUserChecked()) {
             if (getAltUsername().equals("")) {
@@ -529,7 +541,18 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
             udClient = udSite.getTempClient(getAltUsername(), getAltPassword());
         }
         else {
-            udClient = udSite.getClient();
+            try {
+                udClient = udSite.getClient();
+                listener.getLogger().println("[cHECKING UDCLIENT is coming or not]");
+                listener.getLogger().println(udClient);
+            }
+            catch (IOException ex) {
+                throw new AbortException("Deployment has failed due to IOException " + ex.getMessage());
+            }
+            catch (JSONException ex) {
+                throw new AbortException("Deployment has failed due to JSONException " +  ex.getMessage());
+            }
+          
         }
 
         EnvVars envVars = build.getEnvironment(listener);
