@@ -478,7 +478,8 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         UCDeploySite[] sites = GLOBALDESCRIPTOR.getSites(listener);
         listener.getLogger().println("[PERFORM - stART]");
         listener.getLogger().println("[COMING FROM GET SITE- CHECKING SITE VALUE]");
-        listener.getLogger().println(sites.toString());
+        listener.getLogger().println(sites);
+        listener.getLogger().println(Arrays.toString(sites));
         if (siteName == null && sites.length > 0) {
            listener.getLogger().println("[COMING FROM IF CONDITION]");
             // default

@@ -14,7 +14,7 @@ import hudson.model.JobPropertyDescriptor;
 import hudson.model.Job;
 import hudson.util.CopyOnWriteList;
 import hudson.util.FormFieldValidator;
-import hudson.model.TaskListener;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -37,7 +37,6 @@ import org.kohsuke.stapler.StaplerResponse;
  */
 public class GlobalConfig extends JobProperty<Job<?, ?>> {
 
-    TaskListener listener;
     /**
      * {@inheritDoc}
      *
