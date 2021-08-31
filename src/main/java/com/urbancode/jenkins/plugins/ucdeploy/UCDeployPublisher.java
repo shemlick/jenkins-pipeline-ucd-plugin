@@ -480,7 +480,6 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
         listener.getLogger().println(sites);
         if (siteName == null && sites.length > 0) {
             listener.getLogger().println("[COMING FROM IF CONDITION]");
-            listener.getLogger().println(sites[0]);
             // default
             return sites[0];
         }
