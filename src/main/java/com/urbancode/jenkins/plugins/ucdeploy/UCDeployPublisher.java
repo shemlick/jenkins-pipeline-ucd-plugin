@@ -541,17 +541,17 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
             udClient = udSite.getTempClient(getAltUsername(), getAltPassword());
         }
         else {
-            try {
-                udClient = udSite.getClient();
-                listener.getLogger().println("[cHECKING UDCLIENT is coming or not]");
-                listener.getLogger().println(udClient);
-            }
-            catch (IOException ex) {
-                throw new AbortException("Deployment has failed due to IOException " + ex.getMessage());
-            }
-            catch (JSONException ex) {
-                throw new AbortException("Deployment has failed due to JSONException " +  ex.getMessage());
-            }
+            udClient = udSite.getClient();
+            listener.getLogger().println("[cHECKING UDCLIENT is coming or not]");
+            listener.getLogger().println(udClient);
+//             try {
+//             }
+//             catch (IOException ex) {
+//                 throw new AbortException("Deployment has failed due to IOException " + ex.getMessage());
+//             }
+//             catch (JSONException ex) {
+//                 throw new AbortException("Deployment has failed due to JSONException " +  ex.getMessage());
+//             }
           
         }
 
