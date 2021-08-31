@@ -484,7 +484,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
             return sites[0];
         }
         for (UCDeploySite site : sites) {
-            listener.getLogger().println("[i AM IN FOR LOOP]");
+//             listener.getLogger().println("[i AM IN FOR LOOP]");
 //             listener.getLogger().println(site.getDisplayName());
 //             listener.getLogger().println(siteName);
             if (site.getDisplayName().equals(siteName)) {
