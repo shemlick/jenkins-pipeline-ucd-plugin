@@ -476,22 +476,21 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
      */
     public UCDeploySite getSite() {
         UCDeploySite[] sites = GLOBALDESCRIPTOR.getSites();
-//         listener.getLogger().println("[COMING FROM GET SITE- CHECKING SITE VALUE]");
-//         listener.getLogger().println(sites);
+        System.out.println("[COMING FROM GET SITE- CHECKING SITE VALUE]");
+        System.out.println(sites);
         if (siteName == null && sites.length > 0) {
-//           listener.getLogger().println("[COMING FROM IF CONDITION]");
+           System.out.println("[COMING FROM IF CONDITION]");
             // default
             return sites[0];
         }
         for (UCDeploySite site : sites) {
-//             listener.getLogger().println("[i AM IN FOR LOOP]");
-//             listener.getLogger().println(site.getDisplayName());
-//             listener.getLogger().println(siteName);
+            System.out.println("[i AM IN FOR LOOP]");
+            System.out.println(site.getDisplayName());
+            System.out.println(siteName);
             if (site.getDisplayName().equals(siteName)) {
-//                 listener.getLogger().println("PASSED ALL IF CONDITION");
-//                 listener.getLogger().println(site);
-                return site;
-                
+                 System.out.println("PASSED ALL IF CONDITION");
+                 System.out.println(site);
+                return site;    
             }
         }
         return null;
