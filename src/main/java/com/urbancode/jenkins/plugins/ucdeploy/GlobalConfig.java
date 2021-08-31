@@ -14,7 +14,7 @@ import hudson.model.JobPropertyDescriptor;
 import hudson.model.Job;
 import hudson.util.CopyOnWriteList;
 import hudson.util.FormFieldValidator;
-
+import hudson.model.TaskListener;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -70,14 +70,14 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
         public UCDeploySite[] getSites(final TaskListener listener) {
             try{
                 listener.getLogger().println("GET SITE Fucntion calling....");
-            Iterator<UCDeploySite> it = sites.iterator();
-            int size = 0;
-            while (it.hasNext()) {
-                listener.getLogger().println(it);
-                it.next();
-                size++;
-            }
-            return sites.toArray(new UCDeploySite[size]);
+                Iterator<UCDeploySite> it = sites.iterator();
+                int size = 0;
+                while (it.hasNext()) {
+                    listener.getLogger().println(it);
+                    it.next();
+                    size++;
+                }
+                return sites.toArray(new UCDeploySite[size]);
             }catch(Exception e){
                 throw e;
             }
