@@ -67,7 +67,7 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
             load();
         }
 
-        public UCDeploySite[] getSites(final TaskListener listener) {
+        public UCDeploySite[] getSites(TaskListener listener) {
             try{
                 listener.getLogger().println("GET SITE Fucntion calling....");
                 Iterator<UCDeploySite> it = sites.iterator();
@@ -79,7 +79,7 @@ public class GlobalConfig extends JobProperty<Job<?, ?>> {
                 }
                 return sites.toArray(new UCDeploySite[size]);
             }catch(Exception e){
-                throw e;
+                throw new AbortException(e.getMessage());
             }
             
         }
