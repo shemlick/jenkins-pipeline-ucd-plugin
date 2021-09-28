@@ -643,8 +643,7 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
 
             VersionHelper versionHelper = new VersionHelper(udSite.getUri(), udClient, listener, envVars);
             versionHelper.createVersion(component, "Jenkins Build " + buildName, buildUrl);
-            listener.getLogger().println("UCD Site is " + udSite + "UD HTTP Client is " + udClient
-                                     "EN Vars ais " + envVars );
+            listener.getLogger().println("UCD Site is " + udSite + "UD HTTP Client is " + udClient + "EN Vars ais " + envVars);
             return true;
         }
     }
