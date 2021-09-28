@@ -640,7 +640,9 @@ public class UCDeployPublisher extends Builder implements SimpleBuildStep {
             else {
                 udClient = udSite.getClient();
             }
-
+            listener.getLogger().println("UCD url is" + udSite.getUri())
+            listener.getLogger().println("UCD username is" + udSite.getUser())
+            listener.getLogger().println("UCD password is" + udSite.getPassword().getPlainText())
             VersionHelper versionHelper = new VersionHelper(udSite.getUri(), udClient, listener, envVars);
             versionHelper.createVersion(component, "Jenkins Build " + buildName, buildUrl);
             listener.getLogger().println("UCD Site is " + udSite + "UD HTTP Client is " + udClient + "EN Vars ais " + envVars);
